@@ -15,7 +15,7 @@ function requiredInt(key: string, fallback?: number): number {
 }
 
 export const appConfig = {
-  nodeEnv: optionalString('NODE_ENV', 'development'),
+  nodeEnv: process.env.NODE_ENV || 'development',
   port: requiredInt('PORT', 4000),
   defaultCurrency: optionalString('APP_DEFAULT_CURRENCY', 'CNY'),
   uploadMaxBytes: requiredInt('UPLOAD_MAX_BYTES', 5 * 1024 * 1024),
