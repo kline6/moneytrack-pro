@@ -1,11 +1,11 @@
 services:
   - type: web
     name: moneytrack-api
-    env: node
+    runtime: docker
     region: oregon
     plan: free
-    buildCommand: cd ../.. && pnpm install --frozen-lockfile && cd apps/backend && npx prisma generate && pnpm build
-    startCommand: cd apps/backend && npx prisma migrate deploy && node dist/main.js
+    dockerfilePath: ./Dockerfile.render
+    dockerContext: .
     envVars:
       - key: NODE_ENV
         value: production
