@@ -1,5 +1,4 @@
-FROM node:20-alpine
-RUN apk add --no-cache python3 make g++
+FROM node:20
 RUN corepack enable && corepack prepare pnpm@9.12.2 --activate
 WORKDIR /app
 COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
