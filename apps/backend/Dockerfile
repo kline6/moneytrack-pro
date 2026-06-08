@@ -1,5 +1,6 @@
 FROM node:20-alpine
-RUN corepack enable && corepack prepare pnpm@9.12.2 --activate && npm install -g node-gyp
+RUN apk add --no-cache python3 make g++
+RUN corepack enable && corepack prepare pnpm@9.12.2 --activate
 WORKDIR /app
 COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/backend/package.json ./apps/backend/
