@@ -9,4 +9,4 @@ COPY apps/backend/ ./apps/backend/
 COPY packages/shared/ ./packages/shared/
 RUN cd apps/backend && npx prisma generate && pnpm build
 EXPOSE 4000
-CMD ["node", "apps/backend/dist/main.js"]
+CMD ["node", "--experimental-specifier-resolution=node", "apps/backend/dist/main.js"]
