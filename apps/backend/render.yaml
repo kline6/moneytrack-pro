@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: moneytrack-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd ../.. && pnpm install --frozen-lockfile && cd apps/backend && npx prisma generate && pnpm build
+    startCommand: cd apps/backend && npx prisma migrate deploy && node dist/main.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: moneytrack-db
+          property: connectionString
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_ACCESS_EXPIRES_IN
+        value: 15m
+      - key: APP_DEFAULT_CURRENCY
+        value: CNY
+      - key: UPLOAD_MAX_BYTES
+        value: "5242880"
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "60000"
+      - key: RATE_LIMIT_MAX
+        value: "120"
+databases:
+  - name: moneytrack-db
+    plan: free
+    databaseName: moneytrack
+    user: moneytrack

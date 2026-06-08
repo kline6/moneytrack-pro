@@ -1,0 +1,18 @@
+{
+  "name": "moneytrack-pro",
+  "private": true,
+  "packageManager": "pnpm@9.12.2",
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "build:shared": "pnpm --filter @moneytrack/shared build",
+    "build:backend": "pnpm --filter @moneytrack/backend build",
+    "build:mobile": "pnpm --filter @moneytrack/mobile build",
+    "dev:backend": "pnpm --filter @moneytrack/backend dev",
+    "dev:mobile": "pnpm --filter @moneytrack/mobile dev",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r run test --if-present"
+  }
+}

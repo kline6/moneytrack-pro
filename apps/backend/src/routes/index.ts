@@ -1,0 +1,27 @@
+import { Router } from 'express';
+import { healthRoutes } from '../features/health/routes';
+import { authRoutes } from '../features/auth/routes';
+import { categoryRoutes } from '../features/categories/routes';
+import { transactionRoutes } from '../features/transactions/routes';
+import { budgetRoutes } from '../features/budgets/routes';
+import { analyticsRoutes } from '../features/analytics/routes';
+import { exportRoutes } from '../features/exports/routes';
+import { attachmentRoutes } from '../features/attachments/routes';
+import { aiRoutes } from '../features/ai/routes';
+import { syncRoutes } from '../features/sync/routes';
+import { smartRoutes } from '../features/smart/routes';
+import { authGuard } from '../features/auth/services/authGuard';
+
+const router = Router();
+router.use('/health', healthRoutes);
+router.use('/auth', authRoutes);
+router.use('/categories', authGuard, categoryRoutes);
+router.use('/transactions', authGuard, transactionRoutes);
+router.use('/budgets', authGuard, budgetRoutes);
+router.use('/analytics', authGuard, analyticsRoutes);
+router.use('/exports', authGuard, exportRoutes);
+router.use('/attachments', authGuard, attachmentRoutes);
+router.use('/ai', authGuard, aiRoutes);
+router.use('/sync', authGuard, syncRoutes);
+router.use('/smart', authGuard, smartRoutes);
+export const apiRoutes = router;

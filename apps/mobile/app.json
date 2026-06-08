@@ -1,0 +1,30 @@
+{
+    "expo":  {
+                 "name":  "MoneyTrack",
+                 "slug":  "moneytrack-pro",
+                 "version":  "0.1.0",
+                 "orientation":  "portrait",
+                 "icon":  "./assets/icon.png",
+                 "userInterfaceStyle":  "automatic",
+                 "newArchEnabled":  false,
+                 "scheme":  "moneytrack",
+                 "splash":  {
+                                "image":  "./assets/splash.png",
+                                "resizeMode":  "contain",
+                                "backgroundColor":  "#0F172A"
+                            },
+                 "android":  {
+                                 "adaptiveIcon":  {
+                                                      "foregroundImage":  "./assets/adaptive-icon.png",
+                                                      "backgroundColor":  "#0F172A"
+                                                  },
+                                 "package":  "com.moneytrack.pro",
+                                 "minSdkVersion":  26
+                             },
+                 "plugins":  [
+                                 "expo-router",
+                                 "expo-font",
+                                 "expo-splash-screen"
+                             ]
+             }
+}

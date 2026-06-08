@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: moneytrack
+      POSTGRES_PASSWORD: moneytrack
+      POSTGRES_DB: moneytrack
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U moneytrack"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://moneytrack:moneytrack@postgres:5432/moneytrack?schema=public
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-change-this-in-production}
+      JWT_ACCESS_EXPIRES_IN: 7d
+      APP_DEFAULT_CURRENCY: CNY
+    command: >
+      sh -c "npx prisma migrate deploy && node apps/backend/dist/main.js"
+
+volumes:
+  pgdata:

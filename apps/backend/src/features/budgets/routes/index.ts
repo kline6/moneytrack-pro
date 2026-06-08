@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import { listBudgets, createBudget, updateBudget, deleteBudget, getBudgetSummary, getAnnualSummary } from '../controllers';
+import { validate } from '../../../middlewares';
+import { createBudgetSchema, updateBudgetSchema, listBudgetSchema, annualBudgetSchema } from '../validators';
+const router = Router();
+router.get('/', validate(listBudgetSchema, 'query'), listBudgets);
+router.get('/summary', getBudgetSummary);
+router.get('/annual', validate(annualBudgetSchema, 'query'), getAnnualSummary);
+router.post('/', validate(createBudgetSchema), createBudget);
+router.patch('/:id', validate(updateBudgetSchema), updateBudget);
+router.delete('/:id', deleteBudget);
+export const budgetRoutes = router;
