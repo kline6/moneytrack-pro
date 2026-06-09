@@ -17,4 +17,4 @@ RUN cd apps/backend && npx prisma generate && pnpm build
 
 EXPOSE 4000
 
-CMD ["node", "apps/backend/dist/main.js"]
+CMD ["sh", "-c", "cd apps/backend && npx prisma migrate deploy && node dist/main.js"]
