@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { execSync } from 'child_process';
+import path from 'path';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -24,19 +25,37 @@ app.use('/api/v1', apiRoutes);
 
 app.use(errorHandler);
 
+async function runMigration(): Promise<boolean> {
+  try {
+    const schemaPath = path.resolve(__dirname, '../prisma/schema.prisma');
+    logger.info('Running database migration', { schemaPath });
+
+    const output = execSync(
+      `node node_modules/prisma/build/index.js db push --schema "${schemaPath}" --skip-generate --accept-data-loss`,
+      {
+        encoding: 'utf8',
+        timeout: 120000,
+        stdio: 'pipe',
+        cwd: path.resolve(__dirname, '../..')
+      }
+    );
+    logger.info('Migration output', { output: output.trim().substring(0, 500) });
+    return true;
+  } catch (err: any) {
+    logger.error('Migration failed', {
+      message: err.message?.substring(0, 500),
+      stderr: err.stderr?.substring(0, 500)
+    });
+    return false;
+  }
+}
+
 async function bootstrap() {
   try {
-    // Run prisma db push to ensure database tables exist
-    logger.info('Running database migration...');
-    try {
-      const output = execSync('npx prisma db push --schema prisma/schema.prisma --skip-generate --accept-data-loss', {
-        encoding: 'utf8',
-        timeout: 60000,
-        stdio: 'pipe'
-      });
-      logger.info('Database migration completed', { output: output.trim().substring(0, 200) });
-    } catch (migrateError: any) {
-      logger.error('Database migration failed, continuing anyway', { error: migrateError.message?.substring(0, 300) });
+    // Ensure database tables exist
+    const migrationOk = await runMigration();
+    if (!migrationOk) {
+      logger.warn('Migration had issues, attempting to continue...');
     }
 
     await prisma.$connect();
