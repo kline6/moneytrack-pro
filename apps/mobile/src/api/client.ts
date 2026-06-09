@@ -1,11 +1,11 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_BASE = 'http://127.0.0.1:4000/api/v1';
+const API_BASE = 'https://moneytrack-api-v2.onrender.com/api/v1';
 
 export const apiClient = axios.create({
   baseURL: API_BASE,
-  timeout: 15000,
+  timeout: 90000,
   headers: { 'Content-Type': 'application/json' },
 });
 
