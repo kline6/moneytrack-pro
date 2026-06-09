@@ -1,12 +1,12 @@
-import axios from 'axios';
+﻿import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_BASE = 'https://moneytrack-api-v2.onrender.com/api/v1';
+const API_BASE = __DEV__ ? 'http://10.0.2.2:4000/api/v1' : 'https://moneytrack-api-v2.onrender.com/api/v1';
 
 export const apiClient = axios.create({
   baseURL: API_BASE,
   timeout: 90000,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
 });
 
 apiClient.interceptors.request.use(async (config) => {
@@ -33,5 +33,3 @@ export interface ApiResponse<T> {
   meta?: Record<string, unknown> | null;
   error?: { code: string; message: string; details?: any[] } | null;
 }
-
-

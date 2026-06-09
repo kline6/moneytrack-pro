@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+ï»¿import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { AppError } from '../errors';
 import { logger } from '../infrastructure/logger';
@@ -15,7 +15,7 @@ export function errorHandler(err: Error, req: Request, res: Response, _next: Nex
       success: false,
       data: null,
       meta: null,
-      error: { code: 'VALIDATION_ERROR', message: 'ÇëÇó²ÎÊıĞ£ÑéÊ§°Ü', details }
+      error: { code: 'VALIDATION_ERROR', message: 'è¯·æ±‚å‚æ•°æ ¡éªŒå¤±è´¥', details }
     };
     return res.status(400).json(body);
   }
@@ -38,7 +38,7 @@ export function errorHandler(err: Error, req: Request, res: Response, _next: Nex
     success: false,
     data: null,
     meta: null,
-    error: { code: 'SYSTEM_UNEXPECTED_ERROR', message: err.message || '·şÎñÆ÷ÄÚ²¿´íÎó' }
+    error: { code: 'SYSTEM_UNEXPECTED_ERROR', message: err.message || 'æœåŠ¡å™¨å†…éƒ¨é”™è¯¯' }
   };
   return res.status(500).json(body);
 }
