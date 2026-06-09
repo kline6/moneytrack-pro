@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -13,34 +13,25 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const { isLoading, restoreSession, isAuthenticated } = useAuthStore();
   const { snackbarItem, dismissSnackbar } = useNotificationListener(isAuthenticated);
-  const [appReady, setAppReady] = React.useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
-    async function prepare() {
-      try {
-        await Font.loadAsync(Ionicons.font);
-      } catch (e) {
-        console.warn('Font loading error:', e);
-      } finally {
-        setAppReady(true);
-      }
-    }
-    prepare();
+    Font.loadAsync(Ionicons.font).then(() => setFontsLoaded(true)).catch(() => setFontsLoaded(true));
   }, []);
 
   useEffect(() => {
-    if (appReady) {
+    if (fontsLoaded) {
       restoreSession();
     }
-  }, [appReady]);
+  }, [fontsLoaded]);
 
   useEffect(() => {
-    if (appReady && !isLoading) {
+    if (fontsLoaded && !isLoading) {
       SplashScreen.hideAsync();
     }
-  }, [appReady, isLoading]);
+  }, [fontsLoaded, isLoading]);
 
-  if (!appReady || isLoading) {
+  if (!fontsLoaded || isLoading) {
     return null;
   }
 
