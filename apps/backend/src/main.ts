@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { execSync } from 'child_process';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -25,6 +26,19 @@ app.use(errorHandler);
 
 async function bootstrap() {
   try {
+    // Run prisma db push to ensure database tables exist
+    logger.info('Running database migration...');
+    try {
+      const output = execSync('npx prisma db push --schema prisma/schema.prisma --skip-generate --accept-data-loss', {
+        encoding: 'utf8',
+        timeout: 60000,
+        stdio: 'pipe'
+      });
+      logger.info('Database migration completed', { output: output.trim().substring(0, 200) });
+    } catch (migrateError: any) {
+      logger.error('Database migration failed, continuing anyway', { error: migrateError.message?.substring(0, 300) });
+    }
+
     await prisma.$connect();
     logger.info('Database connected');
 
