@@ -1,4 +1,4 @@
-﻿import { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { authService } from '../services/authService';
 import { sendSuccess, sendCreated } from '../../../utils';
 
