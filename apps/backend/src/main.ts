@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import { execSync } from 'child_process';
-import path from 'path';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -27,16 +26,18 @@ app.use(errorHandler);
 
 async function runMigration(): Promise<boolean> {
   try {
-    const schemaPath = path.resolve(__dirname, '../prisma/schema.prisma');
-    logger.info('Running database migration', { schemaPath });
+    // Find prisma binary at /app/node_modules/prisma/build/index.js
+    const prismaBin = '/app/node_modules/prisma/build/index.js';
+    const schemaPath = '/app/apps/backend/prisma/schema.prisma';
+    logger.info('Running database migration', { prismaBin, schemaPath });
 
     const output = execSync(
-      `node node_modules/prisma/build/index.js db push --schema "${schemaPath}" --skip-generate --accept-data-loss`,
+      `node "${prismaBin}" db push --schema "${schemaPath}" --skip-generate --accept-data-loss`,
       {
         encoding: 'utf8',
         timeout: 120000,
         stdio: 'pipe',
-        cwd: path.resolve(__dirname, '../..')
+        cwd: '/app'
       }
     );
     logger.info('Migration output', { output: output.trim().substring(0, 500) });
@@ -52,7 +53,6 @@ async function runMigration(): Promise<boolean> {
 
 async function bootstrap() {
   try {
-    // Ensure database tables exist
     const migrationOk = await runMigration();
     if (!migrationOk) {
       logger.warn('Migration had issues, attempting to continue...');
