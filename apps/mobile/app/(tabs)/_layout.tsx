@@ -1,7 +1,8 @@
-﻿import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs, Redirect } from 'expo-router';
 import { Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Font from 'expo-font';
 import { useAuthStore } from '../../src/store/authStore';
 
 const TAB_ICONS: Record<string, { active: keyof typeof Ionicons.glyphMap; inactive: keyof typeof Ionicons.glyphMap; label: string }> = {
@@ -14,8 +15,16 @@ const TAB_ICONS: Record<string, { active: keyof typeof Ionicons.glyphMap; inacti
 
 export default function TabsLayout() {
   const { isAuthenticated } = useAuthStore();
+  const [fontsReady, setFontsReady] = useState(false);
+
+  useEffect(() => {
+    Font.loadAsync({
+      ionicons: require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf'),
+    }).then(() => setFontsReady(true)).catch(() => setFontsReady(true));
+  }, []);
 
   if (!isAuthenticated) return <Redirect href="/(auth)/login" />;
+  if (!fontsReady) return null;
 
   return (
     <Tabs
