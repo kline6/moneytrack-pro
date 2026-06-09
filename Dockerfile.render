@@ -12,9 +12,11 @@ RUN pnpm install --frozen-lockfile
 
 COPY apps/backend/ ./apps/backend/
 COPY packages/shared/ ./packages/shared/
+COPY start.sh ./start.sh
 
+RUN chmod +x start.sh
 RUN cd apps/backend && npx prisma generate && pnpm build
 
 EXPOSE 4000
 
-CMD ["sh", "-c", "cd apps/backend && npx prisma migrate deploy && node dist/main.js"]
+CMD ["./start.sh"]
