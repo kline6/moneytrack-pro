@@ -20,8 +20,13 @@ apiClient.interceptors.request.use(async (config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
+    // 只在明确的认证失败时清除 token（排除网络错误和超时）
     if (error.response?.status === 401) {
-      await AsyncStorage.removeItem('accessToken');
+      const code = error.response?.data?.error?.code;
+      // AUTH_TOKEN_EXPIRED 或 AUTH_TOKEN_INVALID 才清除，其他 401 不清除
+      if (code === 'AUTH_TOKEN_EXPIRED' || code === 'AUTH_TOKEN_INVALID' || code === 'AUTH_TOKEN_MISSING') {
+        await AsyncStorage.removeItem('accessToken');
+      }
     }
     return Promise.reject(error);
   }
